@@ -1,0 +1,1 @@
+export function DropdownMenu({ children }) { return children; } export function DropdownMenuTrigger({ children }) { return children; } export function DropdownMenuContent({ children }) { return <div className="dropdown">{children}</div>; } export function DropdownMenuItem({ children }) { return <button>{children}</button>; }

@@ -18,6 +18,7 @@ export interface UserDocument {
   name: string;
   email: string;
   passwordHash: string;
+  profilePhotoUrl?: string;
   createdAt: Date;
 }
 

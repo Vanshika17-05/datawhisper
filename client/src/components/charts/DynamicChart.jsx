@@ -8,7 +8,7 @@ const number = (value) => typeof value === "number" && Number.isFinite(value);
 function chartRows(rows) {
   return rows.map((row, index) => { const entries = Object.entries(row); const valueEntry = entries.find(([key, value]) => key !== "_id" && number(value)) || entries.find(([, value]) => number(value)); const labelEntry = entries.find(([key, value]) => key !== valueEntry?.[0] && (key === "_id" || !number(value))); return { ...row, __label: readable(labelEntry?.[1] ?? index + 1), __value: valueEntry?.[1] ?? 0 }; });
 }
-const tooltipStyle = { background: "rgba(19,17,26,.96)", border: "1px solid rgba(110,58,255,.5)", borderRadius: 10, color: "#f7f4ff", fontSize: 12 };
+const tooltipStyle = { background: "rgba(13,11,15,.96)", border: "1px solid rgba(201,68,158,.5)", borderRadius: 10, color: "#f7f4ff", fontSize: 12 };
 
 function SortableTable({ rows }) {
   const columns = useMemo(() => [...new Set(rows.flatMap(Object.keys))].filter((key) => key !== "__v"), [rows]); const [sort, setSort] = useState({ key: null, direction: 1 });

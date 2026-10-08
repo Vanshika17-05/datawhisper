@@ -5,7 +5,7 @@ const download = (href, name) => { const anchor = document.createElement("a"); a
 
 export async function exportChartAsPng(node, title) {
   if (!node) throw new Error("Chart is not ready to export");
-  const dataUrl = await toPng(node, { cacheBust: true, pixelRatio: 2, backgroundColor: "#13111a" });
+  const dataUrl = await toPng(node, { cacheBust: true, pixelRatio: 2, backgroundColor: "#0d0b0f" });
   const name = fileName(title, "png"); const blob = await fetch(dataUrl).then((response) => response.blob());
   download(dataUrl, name);
   return { blob, name };

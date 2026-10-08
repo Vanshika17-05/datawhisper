@@ -28,7 +28,7 @@ export async function generateQueryPlan(question) {
   try {
     const request = (model) => ai.models.generateContent({
       model, contents: question,
-      config: { systemInstruction: systemPrompt(), temperature: 0.1, tools: [{ functionDeclarations: [runAggregationDeclaration] }], toolConfig: { functionCallingConfig: { mode: FunctionCallingConfigMode.ANY, allowedFunctionNames: ["runAggregation"] } } },
+      config: { systemInstruction: systemPrompt(), temperature: 0.1, httpOptions: { timeout: 45000 }, abortSignal: AbortSignal.timeout(45000), tools: [{ functionDeclarations: [runAggregationDeclaration] }], toolConfig: { functionCallingConfig: { mode: FunctionCallingConfigMode.ANY, allowedFunctionNames: ["runAggregation"] } } },
     });
     let response;
     try { response = await request(env.GEMINI_MODEL); }

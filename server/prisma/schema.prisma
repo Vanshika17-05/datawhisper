@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model QueryLog {
+  id             String   @id @default(cuid())
+  userId         String
+  question       String
+  collection     String
+  chartType      String
+  success        Boolean
+  responseTimeMs Int
+  createdAt      DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, collection])
+}

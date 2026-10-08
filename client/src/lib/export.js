@@ -6,7 +6,9 @@ const download = (href, name) => { const anchor = document.createElement("a"); a
 export async function exportChartAsPng(node, title) {
   if (!node) throw new Error("Chart is not ready to export");
   const dataUrl = await toPng(node, { cacheBust: true, pixelRatio: 2, backgroundColor: "#13111a" });
-  download(dataUrl, fileName(title, "png"));
+  const name = fileName(title, "png"); const blob = await fetch(dataUrl).then((response) => response.blob());
+  download(dataUrl, name);
+  return { blob, name };
 }
 
 function flattenRow(row) { return Object.fromEntries(Object.entries(row || {}).flatMap(([key, value]) => value && typeof value === "object" && !Array.isArray(value) ? Object.entries(value).map(([nestedKey, nestedValue]) => [`${key}.${nestedKey}`, nestedValue]) : [[key, value]])); }
@@ -15,5 +17,7 @@ export function exportDataAsCsv(rows, title) {
   const flatRows = (rows || []).map(flattenRow); if (!flatRows.length) throw new Error("There is no data to export");
   const columns = [...new Set(flatRows.flatMap(Object.keys))];
   const csv = [columns.map(csvCell).join(","), ...flatRows.map((row) => columns.map((column) => csvCell(row[column])).join(","))].join("\r\n");
-  const url = URL.createObjectURL(new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" })); download(url, fileName(title, "csv")); window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  const blob = new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" }); const name = fileName(title, "csv");
+  const url = URL.createObjectURL(blob); download(url, name); window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  return { blob, name };
 }

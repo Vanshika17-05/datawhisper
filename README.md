@@ -59,7 +59,7 @@ MongoDB Atlas must allow traffic from the deployed API. Render's free tier uses 
 
 ## S3 export storage
 
-The server uses the standard AWS credential provider chain, so local credentials can come from `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, while deployed workloads should use an IAM role. Grant `s3:PutObject` and `s3:GetObject` on `arn:aws:s3:::<bucket>/exports/*`, plus `s3:PutObject`, `s3:GetObject`, and `s3:DeleteObject` on `arn:aws:s3:::<bucket>/profile-photos/*`. Keep the bucket private; `/api/exports` reads export metadata from MongoDB and profile-photo URLs are refreshed as signed URLs during authentication, so `s3:ListBucket` is not required.
+The server uses the standard AWS credential provider chain, so local credentials can come from `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, while deployed workloads should use an IAM role. Grant only `s3:PutObject` and `s3:GetObject` on `arn:aws:s3:::<bucket>/exports/*`. Keep the bucket private; `/api/exports` reads export metadata from MongoDB and returns signed download URLs, so `s3:ListBucket` is not required.
 
 For automatic retention, apply a bucket lifecycle rule to the `exports/` prefix. For example, this rule removes generated artifacts after 90 days:
 

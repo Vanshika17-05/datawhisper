@@ -18,12 +18,20 @@ export function ChatPanel() {
     const question = input.trim();
     if (question.length < 3 || isLoading) return undefined;
     const controller = new AbortController();
-    const timer = window.setTimeout(() => {
+    let retryTimer;
+    const retrieve = (attempt = 0) => {
       getSimilarQuestions(question, controller.signal)
-        .then((response) => setSuggestions(response.similar || []))
+        .then((response) => {
+          const similar = response.similar || [];
+          if (!similar.length && attempt < 2) { retryTimer = window.setTimeout(() => retrieve(attempt + 1), 1500); return; }
+          setSuggestions(similar);
+        })
         .catch((error) => { if (error.code !== "ERR_CANCELED") setSuggestions([]); });
+    };
+    const timer = window.setTimeout(() => {
+      retrieve();
     }, 400);
-    return () => { window.clearTimeout(timer); controller.abort(); };
+    return () => { window.clearTimeout(timer); window.clearTimeout(retryTimer); controller.abort(); };
   }, [input, isLoading]);
   const ask = async (question) => {
     const clean = question.trim(); if (!clean || isLoading) return;
